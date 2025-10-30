@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>حاسبة القروض</title>
+<style>
+body{font-family:Arial, sans-serif; background:#f8f9ff; padding:20px;}
+.container{max-width:400px;margin:auto;background:#fff;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
+h2{text-align:center;}
+label{display:block;margin:10px 0 5px;}
+input{width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;}
+button{margin-top:10px;width:100%;padding:10px;background:#2b6ef6;color:#fff;border:0;border-radius:8px;font-weight:bold;cursor:pointer;}
+.result{margin-top:15px;padding:10px;background:#eef2ff;border-radius:8px;display:none;}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>حاسبة القروض العائلية</h2>
+
+<label>إجمالي المحفظة (جنيه)</label>
+<input id="fundTotal" type="number" placeholder="مثال: 10000">
+
+<label>مساهمة المساهم (جنيه)</label>
+<input id="contribution" type="number" placeholder="مثال: 1000">
+
+<label>المبلغ المطلوب كقرض (جنيه)</label>
+<input id="requested" type="number" placeholder="مثال: 2000">
+
+<label>مدة السداد (شهور)</label>
+<input id="months" type="number" placeholder="مثال: 6" value="6">
+
+<label>النسبة القصوى المسموح بها (%)</label>
+<input id="maxPercent" type="number" placeholder="مثال: 30" value="30">
+
+<button onclick="calculate()">احسب الآن</button>
+
+<div id="output" class="result"></div>
+</div>
+
+<script>
+function calculate(){
+  const fund = parseFloat(document.getElementById('fundTotal').value);
+  const contrib = parseFloat(document.getElementById('contribution').value);
+  const requested = parseFloat(document.getElementById('requested').value);
+  const months = parseInt(document.getElementById('months').value);
+  const percent = parseFloat(document.getElementById('maxPercent').value);
+
+  if(!fund || !contrib || !requested || !months || !percent){
+    alert("من فضلك املأ جميع الخانات بشكل صحيح");
+    return;
+  }
+
+  const share = contrib / fund;
+  const maxLoan = fund * (percent/100) * share;
+  const finalLoan = Math.min(requested, maxLoan);
+  const monthly = finalLoan / months;
+
+  const output = document.getElementById('output');
+  output.style.display = 'block';
+  output.innerHTML = `
+    <strong>النتائج:</strong><br>
+    سقف القرض المسموح: ${maxLoan.toFixed(2)} ج<br>
+    القرض الفعلي: ${finalLoan.toFixed(2)} ج<br>
+    عدد الأقساط: ${months} شهر<br>
+    قيمة القسط الشهري: ${monthly.toFixed(2)} ج
+  `;
+}
+</script>
+</body>
+</html>
